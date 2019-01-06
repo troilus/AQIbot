@@ -1,0 +1,4 @@
+{
+    "bot_token": "PLACE YOUR TELEGRAM BOT TOKEN HERE",
+    "aqi_token": "PLACE YOUR WAQI API TOKEN HERE"
+}
