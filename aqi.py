@@ -10,18 +10,9 @@ with open('./config.json', 'r+') as config_file:
     print('Config file load successfully:\n' + str(config))
     bot_token = config['bot_token']
     aqi_token = config['aqi_token']
+    channel_id = config['channel_id']
 
 bot = telebot.TeleBot(bot_token)
-
-"""
-location = input()
-url = 'https://api.waqi.info/feed/' + location + '/?token=' + aqi_token
-aqi = requests.get(url)
-
-text = aqi.json()
-
-print(text)
-"""
 
 try:
     @bot.message_handler(commands=['start'])
@@ -47,12 +38,9 @@ try:
         		msg += str(i) + ': ' + str(aqi_text['data']['iaqi'][i]['v']) + '\n'
         	msg += 'Time: ' + str(aqi_text['data']['time']['s'])
         	bot.reply_to(message, msg)
+            bot.send_message(channel_id, msg)
         else:
         	bot.reply_to(message, str(aqi_text['data']))
-    
-    while True:
-    	if int(time.time())%5 == 0:
-    		print("5!")
     
     bot.polling(none_stop=True)
 except KeyboardInterrupt:
