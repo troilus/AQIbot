@@ -10,7 +10,7 @@ with open('./config.json', 'r+') as config_file:
     print('Config file load successfully:\n' + str(config))
     bot_token = config['bot_token']
     aqi_token = config['aqi_token']
-    channel_id = config['channel_id']
+    channel_id = int(config['channel_id'])
 
 bot = telebot.TeleBot(bot_token)
 
@@ -38,7 +38,7 @@ try:
         		msg += str(i) + ': ' + str(aqi_text['data']['iaqi'][i]['v']) + '\n'
         	msg += 'Time: ' + str(aqi_text['data']['time']['s'])
         	bot.reply_to(message, msg)
-            bot.send_message(channel_id, msg)
+        	bot.send_message(chat_id=channel_id, text=msg)
         else:
         	bot.reply_to(message, str(aqi_text['data']))
     
