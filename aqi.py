@@ -1,9 +1,11 @@
+#!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
 import telebot
 import requests
 import json
 import time
+import threading
 
 with open('./config.json', 'r+') as config_file:
     config = json.load(config_file)
@@ -38,10 +40,29 @@ try:
         		msg += str(i) + ': ' + str(aqi_text['data']['iaqi'][i]['v']) + '\n'
         	msg += 'Time: ' + str(aqi_text['data']['time']['s'])
         	bot.reply_to(message, msg)
-        	bot.send_message(chat_id=channel_id, text=msg)
         else:
         	bot.reply_to(message, str(aqi_text['data']))
     
+    def channel_broadcast(bot, id):
+        while 1:
+            if int(time.time())%3600==0:
+                aqi_url = 'https://api.waqi.info/feed/beijing/?token=' + aqi_token
+                aqi_information = requests.get(aqi_url)
+                aqi_text = aqi_information.json()
+                print('acquire aqi_json_content:', aqi_text)
+                if aqi_text['status']=='ok':
+                    msg = str(aqi_text['data']['city']['name']) + '\n'
+                    msg += 'AQI: ' + str(aqi_text['data']['aqi']) + '\n'
+                    for i in aqi_text['data']['iaqi']:
+                        msg += str(i) + ': ' + str(aqi_text['data']['iaqi'][i]['v']) + '\n'
+                    msg += 'Time: ' + str(aqi_text['data']['time']['s'])
+                    bot.send_message(id, msg)
+                else:
+                    bot.send_message(id, str(aqi_text['data']))
+                time.sleep(3580)
+    broadcast = threading.Thread(target=channel_broadcast, args=(bot, channel_id))
+    broadcast.start()
+
     bot.polling(none_stop=True)
 except KeyboardInterrupt:
     quit()
