@@ -28,11 +28,12 @@ try:
     @bot.message_handler(commands=['aqi'])
     def aqi(message):
         location = message.text.split()
+        print('-----User requests-----')
         print('acquire location:', location[1])
         aqi_url = 'https://api.waqi.info/feed/' + location[1] + '/?token=' + aqi_token
         aqi_information = requests.get(aqi_url)
         aqi_text = aqi_information.json()
-        print('acquire aqi_json_content:', aqi_text)
+        print('acquired aqi_json_content:', aqi_text)
         if aqi_text['status']=='ok':
         	msg = str(aqi_text['data']['city']['name']) + '\n'
         	msg += 'AQI: ' + str(aqi_text['data']['aqi']) + '\n'
@@ -49,10 +50,11 @@ try:
             curr_timestamp = int(time.time())
             if curr_timestamp - last_timestamp >= 1800:
                 last_timestamp = curr_timestamp
+                print('-----Half-hour auto push-----')
                 aqi_url = 'https://api.waqi.info/feed/beijing/?token=' + aqi_token
                 aqi_information = requests.get(aqi_url)
                 aqi_text = aqi_information.json()
-                print('acquire aqi_json_content:', aqi_text)
+                print('acquired aqi_json_content:', aqi_text)
                 if aqi_text['status']=='ok':
                     msg = str(aqi_text['data']['city']['name']) + '\n'
                     msg += 'AQI: ' + str(aqi_text['data']['aqi']) + '\n'
