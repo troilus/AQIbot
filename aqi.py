@@ -44,8 +44,11 @@ try:
         	bot.reply_to(message, str(aqi_text['data']))
     
     def channel_broadcast(bot, id):
+        last_timestamp = 0
         while 1:
-            if int(time.time())%3600==0:
+            curr_timestamp = int(time.time())
+            if curr_timestamp - last_timestamp >= 1800:
+                last_timestamp = curr_timestamp
                 aqi_url = 'https://api.waqi.info/feed/beijing/?token=' + aqi_token
                 aqi_information = requests.get(aqi_url)
                 aqi_text = aqi_information.json()
@@ -59,7 +62,7 @@ try:
                     bot.send_message(id, msg)
                 else:
                     bot.send_message(id, str(aqi_text['data']))
-                time.sleep(3580)
+            time.sleep(60)
     broadcast = threading.Thread(target=channel_broadcast, args=(bot, channel_id))
     broadcast.start()
 
