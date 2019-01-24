@@ -25,24 +25,27 @@ try:
     def help(message):
         bot.reply_to(message, '这是一个可以告诉你空气质量的bot。\n请输入 /aqi <location> 来获取空气质量信息。')
 
+    def checkAPI(location):
+        aqi_url = 'https://api.waqi.info/feed/' + location + '/?token=' + aqi_token
+        aqi_information = requests.get(aqi_url)
+        aqi_text = aqi_information.json()
+        print('acquired aqi_json_content:', aqi_text)
+        if aqi_text['status']=='ok':
+            msg = str(aqi_text['data']['city']['name']) + '\n'
+            msg += 'AQI: ' + str(aqi_text['data']['aqi']) + '\n'
+            for i in aqi_text['data']['iaqi']:
+                msg += str(i) + ': ' + str(aqi_text['data']['iaqi'][i]['v']) + '\n'
+            msg += 'Time: ' + str(aqi_text['data']['time']['s'])
+            return msg
+        else:
+            return str(aqi_text['data'])
+
     @bot.message_handler(commands=['aqi'])
     def aqi(message):
         location = message.text.split()
         print('-----User requests-----')
         print('acquire location:', location[1])
-        aqi_url = 'https://api.waqi.info/feed/' + location[1] + '/?token=' + aqi_token
-        aqi_information = requests.get(aqi_url)
-        aqi_text = aqi_information.json()
-        print('acquired aqi_json_content:', aqi_text)
-        if aqi_text['status']=='ok':
-        	msg = str(aqi_text['data']['city']['name']) + '\n'
-        	msg += 'AQI: ' + str(aqi_text['data']['aqi']) + '\n'
-        	for i in aqi_text['data']['iaqi']:
-        		msg += str(i) + ': ' + str(aqi_text['data']['iaqi'][i]['v']) + '\n'
-        	msg += 'Time: ' + str(aqi_text['data']['time']['s'])
-        	bot.reply_to(message, msg)
-        else:
-        	bot.reply_to(message, str(aqi_text['data']))
+        bot.reply_to(message, checkAPI(location[1]))
     
     def channel_broadcast(bot, id):
         last_timestamp = 0
@@ -51,19 +54,7 @@ try:
             if curr_timestamp - last_timestamp >= 1800:
                 last_timestamp = curr_timestamp
                 print('-----Half-hour auto push-----')
-                aqi_url = 'https://api.waqi.info/feed/beijing/?token=' + aqi_token
-                aqi_information = requests.get(aqi_url)
-                aqi_text = aqi_information.json()
-                print('acquired aqi_json_content:', aqi_text)
-                if aqi_text['status']=='ok':
-                    msg = str(aqi_text['data']['city']['name']) + '\n'
-                    msg += 'AQI: ' + str(aqi_text['data']['aqi']) + '\n'
-                    for i in aqi_text['data']['iaqi']:
-                        msg += str(i) + ': ' + str(aqi_text['data']['iaqi'][i]['v']) + '\n'
-                    msg += 'Time: ' + str(aqi_text['data']['time']['s'])
-                    bot.send_message(id, msg)
-                else:
-                    bot.send_message(id, str(aqi_text['data']))
+                bot.send_message(id, checkAPI('beijing'))
             time.sleep(60)
     broadcast = threading.Thread(target=channel_broadcast, args=(bot, channel_id))
     broadcast.start()
