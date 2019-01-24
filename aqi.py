@@ -30,6 +30,9 @@ try:
         aqi_information = requests.get(aqi_url)
         aqi_text = aqi_information.json()
         print('acquired aqi_json_content:', aqi_text)
+        return aqi_text
+
+    def formatData(aqi_text):
         if aqi_text['status']=='ok':
             msg = str(aqi_text['data']['city']['name']) + '\n'
             msg += 'AQI: ' + str(aqi_text['data']['aqi']) + '\n'
@@ -45,17 +48,18 @@ try:
         location = message.text.split()
         print('-----User requests-----')
         print('acquire location:', location[1])
-        bot.reply_to(message, checkAPI(location[1]))
+        bot.reply_to(message, formatData(checkAPI(location[1])))
     
-    def channel_broadcast(bot, id):
-        last_timestamp = 0
+    def channel_broadcast(bot, channel_id):
+        last_data = checkAPI('beijing')
         while 1:
-            curr_timestamp = int(time.time())
-            if curr_timestamp - last_timestamp >= 1800:
-                last_timestamp = curr_timestamp
+            print('-----10min auto check-----')
+            curr_data = checkAPI('beijing')
+            if int(last_data['data']['time']['v']) != int(curr_data['data']['time']['v']):
                 print('-----Half-hour auto push-----')
-                bot.send_message(id, checkAPI('beijing'))
-            time.sleep(60)
+                bot.send_message(channel_id, formatData(checkAPI('beijing')))
+                last_data = curr_data
+            time.sleep(600)
     broadcast = threading.Thread(target=channel_broadcast, args=(bot, channel_id))
     broadcast.start()
 
