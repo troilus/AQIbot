@@ -74,7 +74,7 @@ try:
                 msg += str(formatPol(str(i))) + ': ' + str(aqi_text['data']['iaqi'][i]['v']) + '\n'
 
             msg += '数据更新时间：' + str(aqi_text['data']['time']['s']) + '\n'
-            msg += '数据来源：' + aqi_text['data']['city']['url']
+            
             return msg
         else:
             return str(aqi_text['data']) + '\n请联系开发者解决问题，或者使用 /help 获取帮助。'
