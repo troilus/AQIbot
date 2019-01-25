@@ -52,14 +52,16 @@ try:
     
     def channel_broadcast(bot, channel_id):
         last_data = checkAPI('beijing')
+        time.sleep(10)
         while 1:
-            print('-----10min auto check-----')
+            print('-----1min auto check-----')
             curr_data = checkAPI('beijing')
-            if int(last_data['data']['time']['v']) != int(curr_data['data']['time']['v']):
-                print('-----Half-hour auto push-----')
-                bot.send_message(channel_id, formatData(checkAPI('beijing')))
+            if last_data['data']['time']['s'] != curr_data['data']['time']['s']:
+                print('-----auto push-----')
+                bot.send_message(channel_id, formatData(curr_data))
                 last_data = curr_data
-            time.sleep(600)
+            time.sleep(60)
+        print('*-*-*-*Thread Exited*-*-*-*')
     broadcast = threading.Thread(target=channel_broadcast, args=(bot, channel_id))
     broadcast.start()
 
