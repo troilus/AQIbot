@@ -32,16 +32,52 @@ try:
         print('acquired aqi_json_content:', aqi_text)
         return aqi_text
 
+    def formatPol(pollution):
+        if pollution == 'pm25':
+            return 'PM2.5'
+        elif pollution == 'pm10':
+            return 'PM10'
+        elif pollution == 'co':
+            return '一氧化碳'
+        elif pollution == 'no2':
+            return '二氧化氮'
+        elif pollution == 'o3':
+            return '臭氧'
+        elif pollution == 'so2':
+            return '二氧化硫'
+        else:
+            return pollution
+
     def formatData(aqi_text):
         if aqi_text['status']=='ok':
-            msg = str(aqi_text['data']['city']['name']) + '\n'
-            msg += 'AQI: ' + str(aqi_text['data']['aqi']) + '\n'
+            msg = '为您播报 ' + str(aqi_text['data']['city']['name']) + ' 的空气质量信息\n'
+            
+            aqi_temp = aqi_text['data']['aqi']
+            msg += '空气质量指数AQI：' + str(aqi_temp) + ' '
+            if 0 <= aqi_temp <= 50:
+                msg += '一级 优 ⭕️⭕️\n'
+            elif 51 <= aqi_temp <= 100:
+                msg += '二级 良 ⭕️\n'
+            elif 101 <= aqi_temp <= 150:
+                msg += '三级 轻度污染 ❗️\n'
+            elif 151 <= aqi_temp <= 200:
+                msg += '四级 中度污染 ❗️❗️\n'
+            elif 201 <= aqi_temp <= 300:
+                msg += '五级 重度污染 ❗️❗️❗️\n'
+            elif 301 <= aqi_temp:
+                msg += '六级 严重污染 ❗️❗️❗️❗️\n'
+
+            aqi_temp = aqi_text['data']['dominentpol']
+            msg += '主要污染物：' + str(formatPol(aqi_temp)) + '\n'
+
             for i in aqi_text['data']['iaqi']:
-                msg += str(i) + ': ' + str(aqi_text['data']['iaqi'][i]['v']) + '\n'
-            msg += 'Time: ' + str(aqi_text['data']['time']['s'])
+                msg += str(formatPol(str(i))) + ': ' + str(aqi_text['data']['iaqi'][i]['v']) + '\n'
+
+            msg += '数据更新时间：' + str(aqi_text['data']['time']['s']) + '\n'
+            msg += '数据来源：' + aqi_text['data']['city']['url']
             return msg
         else:
-            return str(aqi_text['data'])
+            return str(aqi_text['data']) + '\n请联系开发者解决问题，或者使用 /help 获取帮助。'
 
     @bot.message_handler(commands=['aqi'])
     def aqi(message):
