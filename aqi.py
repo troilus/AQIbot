@@ -53,7 +53,7 @@ try:
             msg = '为您播报 ' + str(aqi_text['data']['city']['name']) + ' 的空气质量信息\n'
             
             aqi_temp = aqi_text['data']['aqi']
-            msg += '空气质量指数AQI：' + str(aqi_temp) + ' '
+            msg += 'AQI：' + str(aqi_temp) + ' '
             if 0 <= aqi_temp <= 50:
                 msg += '一级 优 ⭕️⭕️\n'
             elif 51 <= aqi_temp <= 100:
