@@ -87,11 +87,14 @@ try:
     @bot.message_handler(commands=['aqi'])
     def aqi(message):
         location = message.text.split()
-        p = Pinyin()
-        location[1] = p.get_pinyin(location[1], "").lower()
-        print('-----User requests-----')
-        print('acquire location:', location[1])
-        bot.reply_to(message, formatData(checkAPI(location[1])))
+        if len(location) == 1:
+        	bot.reply_to(message, "你想知道哪个城市的空气质量？请使用 /help 获取帮助。")
+        else:
+	        p = Pinyin()
+	        location[1] = p.get_pinyin(location[1], "").lower()
+	        print('-----User requests-----')
+	        print('acquire location:', location[1])
+	        bot.reply_to(message, formatData(checkAPI(location[1])))
     
     def channel_broadcast(bot, channel_id):
         last_data = checkAPI('beijing')
