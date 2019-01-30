@@ -92,7 +92,7 @@ try:
         while 1:
             print('-----1min auto check-----')
             curr_data = checkAPI('beijing')
-            if last_data['data']['time']['s'] != curr_data['data']['time']['s']:
+            if last_data['data']['time']['v'] < curr_data['data']['time']['v']:
                 print('-----auto push-----')
                 bot.send_message(channel_id, formatData(curr_data))
                 last_data = curr_data
@@ -106,3 +106,4 @@ except KeyboardInterrupt:
     quit()
 except Exception as e:
     print(str(e))
+
