@@ -55,10 +55,10 @@ try:
 
     def formatData(aqi_text):
         if aqi_text['status']=='ok':
-            msg = '为您播报 ' + str(aqi_text['data']['city']['name']) + ' 的空气质量信息\n'
+            msg = str(aqi_text['data']['city']['name'])
             
             aqi_temp = aqi_text['data']['aqi']
-            msg += 'AQI：' + str(aqi_temp) + ' '
+            msg += '的AQI：' + str(aqi_temp) + ' '
             if 0 <= aqi_temp <= 50:
                 msg += '一级 优 ⭕️⭕️\n'
             elif 51 <= aqi_temp <= 100:
