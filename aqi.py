@@ -46,6 +46,10 @@ try:
             return '臭氧'
         elif pollution == 'so2':
             return '二氧化硫'
+        elif pollution == 'p':
+            return '大气压强'
+        elif pollution == 'w':
+            return '风速'
         else:
             return pollution
 
