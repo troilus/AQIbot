@@ -5,6 +5,7 @@ import telebot
 import requests
 import json
 import time
+from xpinyin import Pinyin
 import threading
 
 with open('./config.json', 'r+') as config_file:
@@ -82,6 +83,8 @@ try:
     @bot.message_handler(commands=['aqi'])
     def aqi(message):
         location = message.text.split()
+        p = Pinyin()
+        location[1] = p.get_pinyin(location[1], "").lower()
         print('-----User requests-----')
         print('acquire location:', location[1])
         bot.reply_to(message, formatData(checkAPI(location[1])))
