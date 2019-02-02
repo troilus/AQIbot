@@ -55,30 +55,45 @@ try:
 
     def formatData(aqi_text):
         if aqi_text['status']=='ok':
-            msg = str(aqi_text['data']['city']['name'])
+            msg = str(aqi_text['data']['city']['name']) + '的AQI：'
             
             aqi_temp = aqi_text['data']['aqi']
-            msg += '的AQI：' + str(aqi_temp) + ' '
-            if 0 <= aqi_temp <= 50:
-                msg += '一级 优 ⭕️⭕️\n'
-            elif 51 <= aqi_temp <= 100:
-                msg += '二级 良 ⭕️\n'
-            elif 101 <= aqi_temp <= 150:
-                msg += '三级 轻度污染 ❗️\n'
-            elif 151 <= aqi_temp <= 200:
-                msg += '四级 中度污染 ❗️❗️\n'
-            elif 201 <= aqi_temp <= 300:
-                msg += '五级 重度污染 ❗️❗️❗️\n'
-            elif 301 <= aqi_temp:
-                msg += '六级 严重污染 ❗️❗️❗️❗️\n'
+
+            if isinstance(aqi_temp, int):
+                msg += str(aqi_temp) + ' '
+                if 0 <= aqi_temp <= 50:
+                    msg += '一级 优 ⭕️⭕️\n'
+                elif 51 <= aqi_temp <= 100:
+                    msg += '二级 良 ⭕️\n'
+                elif 101 <= aqi_temp <= 150:
+                    msg += '三级 轻度污染 ❗️\n'
+                elif 151 <= aqi_temp <= 200:
+                    msg += '四级 中度污染 ❗️❗️\n'
+                elif 201 <= aqi_temp <= 300:
+                    msg += '五级 重度污染 ❗️❗️❗️\n'
+                elif 301 <= aqi_temp:
+                    msg += '六级 严重污染 ❗️❗️❗️❗️\n'
+            else:
+                msg += '未获取到数据\n'
 
             aqi_temp = aqi_text['data']['dominentpol']
-            msg += '主要污染物：' + str(formatPol(aqi_temp)) + '\n'
+            if aqi_temp == "" or not(isinstance(aqi_temp, str)):
+                msg += '主要污染物：未获取到数据\n'
+            else:
+                msg += '主要污染物：' + str(formatPol(aqi_temp)) + '\n'
 
             for i in aqi_text['data']['iaqi']:
-                msg += str(formatPol(str(i))) + ': ' + str(aqi_text['data']['iaqi'][i]['v']) + '\n'
+                aqi_temp = aqi_text['data']['iaqi'][i]['v']
+                if not(aqi_temp, int):
+                    msg += str(formatPol(str(i))) + '：未获取到数据'
+                else:
+                    msg += str(formatPol(str(i))) + '：' + str(aqi_temp) + '\n'
 
-            msg += '数据更新时间：' + str(aqi_text['data']['time']['s']) + '\n'
+            aqi_temp = aqi_text['data']['time']['s']
+            if aqi_temp == "" or not(isinstance(aqi_temp, str)):
+                msg += '数据更新时间：未获取到数据\n'
+            else:
+                msg += '数据更新时间：' + str(aqi_temp) + '\n'
             
             return msg
         else:
