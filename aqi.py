@@ -66,17 +66,17 @@ try:
             if isinstance(aqi_temp, int):
                 msg += str(aqi_temp) + ' '
                 if 0 <= aqi_temp <= 50:
-                    msg += '一级 优 ⭕️⭕️\n'
+                    msg += '优 ⭕️⭕️\n'
                 elif 51 <= aqi_temp <= 100:
-                    msg += '二级 良 ⭕️\n'
+                    msg += '良 ⭕️\n'
                 elif 101 <= aqi_temp <= 150:
-                    msg += '三级 轻度污染 ❗️\n'
+                    msg += '轻度污染 ❗️\n'
                 elif 151 <= aqi_temp <= 200:
-                    msg += '四级 中度污染 ❗️❗️\n'
+                    msg += '中度污染 ❗️❗️\n'
                 elif 201 <= aqi_temp <= 300:
-                    msg += '五级 重度污染 ❗️❗️❗️\n'
+                    msg += '重度污染 ❗️❗️❗️\n'
                 elif 301 <= aqi_temp:
-                    msg += '六级 严重污染 ❗️❗️❗️❗️\n'
+                    msg += '严重污染 ❗️❗️❗️❗️\n'
             else:
                 msg += '未获取到数据\n'
 
