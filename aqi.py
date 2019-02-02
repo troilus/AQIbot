@@ -50,6 +50,10 @@ try:
             return '大气压强'
         elif pollution == 'w':
             return '风速'
+        elif pollution == 'wd':
+            return '风向'
+        elif pollution == 't':
+            return '气温'
         else:
             return pollution
 
