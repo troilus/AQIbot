@@ -101,7 +101,12 @@ try:
             
             return msg
         else:
-            return str(aqi_text['data']) + '\n请联系开发者解决问题，或者使用 /help 获取帮助。'
+            if str(aqi_text['data']) == 'Unknown station':
+                return '未获取到该城市的空气质量信息。'
+            elif str(aqi_text['data']) == 'Invalid key':
+                return 'API_KEY错误，请联系开发者 @LittleBear0729 解决问题。'
+            else:
+                return str(aqi_text['data']) + '\n请联系开发者解决问题，或者使用 /help 获取帮助。'
 
     @bot.message_handler(commands=['aqi'])
     def aqi(message):
