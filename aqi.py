@@ -5,6 +5,7 @@ import telebot
 import requests
 import json
 import time
+import re
 from xpinyin import Pinyin
 import threading
 
@@ -114,11 +115,15 @@ try:
         if len(location) == 1:
         	bot.reply_to(message, "你想知道哪个城市的空气质量？请使用 /help 获取帮助。")
         else:
-	        p = Pinyin()
-	        location[1] = p.get_pinyin(location[1], "").lower()
-	        print('-----User requests-----')
-	        print('acquire location:', location[1])
-	        bot.reply_to(message, formatData(checkAPI(location[1])))
+            pattern = re.compile('^[a-z]+$')
+            if pattern.search(location[1]) == None:
+                bot.reply_to(message, '输入不合法，请检查输入内容。')
+            else:
+    	        p = Pinyin()
+    	        location[1] = p.get_pinyin(location[1], "").lower()
+    	        print('-----User requests-----')
+    	        print('acquire location:', location[1])
+    	        bot.reply_to(message, formatData(checkAPI(location[1])))
     
     def channel_broadcast(bot, channel_id):
         last_data = checkAPI('beijing')
