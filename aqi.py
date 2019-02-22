@@ -59,7 +59,7 @@ try:
             return pollution
 
     def formatData(aqi_text):
-        if aqi_text['status']=='ok':
+        if aqi_text['status'] == 'ok':
             msg = str(aqi_text['data']['city']['name']) + '的AQI：'
             
             aqi_temp = aqi_text['data']['aqi']
@@ -131,10 +131,13 @@ try:
         while 1:
             print('-----1min auto check-----')
             curr_data = checkAPI('beijing')
-            if last_data['data']['time']['v'] < curr_data['data']['time']['v']:
-                print('-----auto push-----')
-                bot.send_message(channel_id, formatData(curr_data))
-                last_data = curr_data
+            if curr_data['status'] == 'ok':
+                if last_data['data']['time']['v'] < curr_data['data']['time']['v']:
+                    print('-----auto push-----')
+                    bot.send_message(channel_id, formatData(curr_data))
+                    last_data = curr_data
+            else:
+                bot.send_message(channel_id, 'API_KEY错误，请联系开发者 @LittleBear0729 解决问题。')
             time.sleep(60)
         print('*-*-*-*Thread Exited*-*-*-*')
     broadcast = threading.Thread(target=channel_broadcast, args=(bot, channel_id))
