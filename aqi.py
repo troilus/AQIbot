@@ -79,6 +79,8 @@ try:
                     msg += '重度污染 ❗️❗️❗️\n'
                 elif 301 <= aqi_temp:
                     msg += '严重污染 ❗️❗️❗️❗️\n'
+                elif aqi_temp == 824:
+                    msg += '\n\n数据源疑似发生错误，小熊表示无能为力\n\n'
             else:
                 msg += '未获取到数据\n'
 
