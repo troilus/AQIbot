@@ -6,6 +6,7 @@ import requests
 import json
 import time
 import re
+import os
 from xpinyin import Pinyin
 import threading
 
@@ -142,6 +143,12 @@ try:
         print('*-*-*-*Thread Exited*-*-*-*')
     broadcast = threading.Thread(target=channel_broadcast, args=(bot, channel_id))
     broadcast.start()
+
+    @bot.message_handler(commands=['restart'])
+    def restart_bot(message):
+        if message.from_user.id == 400521524:
+            bot.reply_to(message, 'Bot is now restarting...')
+            os.system('systemctl restart china-aqi-bot.service')
 
     bot.polling(none_stop=True)
 except KeyboardInterrupt:
