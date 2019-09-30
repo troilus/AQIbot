@@ -26,7 +26,8 @@ try:
 
     @bot.message_handler(commands=['help'])
     def help(message):
-        bot.reply_to(message, '这是一个可以告诉你空气质量的bot。\n请输入 /aqi <location> 来获取空气质量信息。')
+        bot.reply_to(
+            message, '这是一个可以告诉你空气质量的bot。\n请输入 /aqi <location> 来获取空气质量信息。')
 
     def checkAPI(location):
         aqi_url = 'https://api.waqi.info/feed/' + location + '/?token=' + aqi_token
@@ -62,7 +63,7 @@ try:
     def formatData(aqi_text):
         if aqi_text['status'] == 'ok':
             msg = str(aqi_text['data']['city']['name']) + '的AQI：'
-            
+
             aqi_temp = aqi_text['data']['aqi']
 
             if isinstance(aqi_temp, int):
@@ -102,7 +103,7 @@ try:
                 msg += '数据更新时间：未获取到数据\n'
             else:
                 msg += '数据更新时间：' + str(aqi_temp) + '\n'
-            
+
             return msg
         else:
             if str(aqi_text['data']) == 'Unknown station':
@@ -116,7 +117,7 @@ try:
     def aqi(message):
         location = message.text.split()
         if len(location) == 1:
-        	bot.reply_to(message, "你想知道哪个城市的空气质量？请使用 /help 获取帮助。")
+            bot.reply_to(message, "你想知道哪个城市的空气质量？请使用 /help 获取帮助。")
         else:
             p = Pinyin()
             location[1] = p.get_pinyin(location[1], "").lower()
@@ -126,8 +127,8 @@ try:
             if pattern.search(location[1]) == None:
                 bot.reply_to(message, '输入不合法，请检查输入内容。')
             else:
-    	        bot.reply_to(message, formatData(checkAPI(location[1])))
-    
+                bot.reply_to(message, formatData(checkAPI(location[1])))
+
     def channel_broadcast(bot, channel_id):
         last_data = checkAPI('beijing')
         time.sleep(10)
@@ -140,10 +141,12 @@ try:
                     bot.send_message(channel_id, formatData(curr_data))
                     last_data = curr_data
             else:
-                bot.send_message(channel_id, 'API_KEY错误，请联系开发者 @LittleBear0729 解决问题。')
+                bot.send_message(
+                    channel_id, 'API_KEY错误，请联系开发者 @LittleBear0729 解决问题。')
             time.sleep(60)
         print('*-*-*-*Thread Exited*-*-*-*')
-    broadcast = threading.Thread(target=channel_broadcast, args=(bot, channel_id))
+    broadcast = threading.Thread(
+        target=channel_broadcast, args=(bot, channel_id))
     broadcast.start()
 
     @bot.message_handler(commands=['restart'])
@@ -157,4 +160,3 @@ except KeyboardInterrupt:
     quit()
 except Exception as e:
     print(str(e))
-
