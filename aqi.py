@@ -57,6 +57,8 @@ try:
             return '风向'
         elif pollution == 't':
             return '气温'
+        elif pollution == 'h':
+            return '湿度'
         else:
             return pollution
 
@@ -96,7 +98,7 @@ try:
                 if not(aqi_temp, int):
                     msg += str(formatPol(str(i))) + '：未获取到数据'
                 else:
-                    msg += str(formatPol(str(i))) + '：' + str(aqi_temp) + '\n'
+                    msg += str(formatPol(str(i))) + '：\t' + str(aqi_temp) + '\n'
 
             aqi_temp = aqi_text['data']['time']['s']
             if aqi_temp == "" or not(isinstance(aqi_temp, str)):
