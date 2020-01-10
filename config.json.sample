@@ -1,5 +1,8 @@
 {
     "bot_token": "PLACE YOUR TELEGRAM BOT TOKEN HERE",
     "aqi_token": "PLACE YOUR WAQI API TOKEN HERE",
-    "channel_id": "PLACE YOUR BROADCAST CHANNEL ID HERE"
+    "channel_id": "PLACE YOUR BROADCAST CHANNEL ID HERE",
+    "admin_list": [
+        "YOUR ADMIN ID"
+    ]
 }

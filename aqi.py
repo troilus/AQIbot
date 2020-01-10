@@ -12,10 +12,12 @@ import threading
 
 with open('./config.json', 'r+') as config_file:
     config = json.load(config_file)
-    print('Config file load successfully:\n' + str(config))
     bot_token = config['bot_token']
     aqi_token = config['aqi_token']
     channel_id = int(config['channel_id'])
+    admin_list = config['admin_list']
+    print('Config file load successfully:\n' + str(config))
+    print(admin_list)
 
 bot = telebot.TeleBot(bot_token)
 
@@ -133,7 +135,7 @@ try:
 
     def channel_broadcast(bot, channel_id):
         last_data = checkAPI('beijing')
-        time.sleep(10)
+        time.sleep(60)
         while 1:
             print('-----1min auto check-----')
             curr_data = checkAPI('beijing')
@@ -153,9 +155,12 @@ try:
 
     @bot.message_handler(commands=['restart'])
     def restart_bot(message):
-        if message.from_user.id == 400521524:
+        if str(message.from_user.id) in admin_list:
+            print('-----received restart signal-----')
             bot.reply_to(message, 'Bot is now restarting...')
             os.system('systemctl restart china-aqi-bot.service')
+        else:
+            bot.reply_to(message, 'No permission!')
 
     bot.polling(none_stop=True)
 except KeyboardInterrupt:
