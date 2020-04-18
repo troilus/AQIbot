@@ -17,7 +17,6 @@ with open('./config.json', 'r+') as config_file:
     channel_id = int(config['channel_id'])
     admin_list = config['admin_list']
     print('Config file load successfully:\n' + str(config))
-    print(admin_list)
 
 bot = telebot.TeleBot(bot_token)
 
@@ -93,20 +92,20 @@ try:
             if aqi_temp == "" or not(isinstance(aqi_temp, str)):
                 msg += '主要污染物：未获取到数据\n'
             else:
-                msg += '主要污染物：{dominentpol}\n'.format(dominentpol=str(formatPol(aqi_temp)))
+                msg += '主要污染物：{dominentpol:^6}\n'.format(dominentpol=str(formatPol(aqi_temp)))
 
             for i in aqi_text['data']['iaqi']:
                 aqi_temp = aqi_text['data']['iaqi'][i]['v']
                 if not(aqi_temp, int):
                     msg += '{pol}：未获取到数据\n'.format(pol=str(formatPol(str(i))))
                 else:
-                    msg += '{pol}：\t{data}\n'.format(pol=str(formatPol(str(i))), data=str(aqi_temp))
+                    msg += '{pol}：\t{data:^6}\n'.format(pol=str(formatPol(str(i))), data=str(aqi_temp))
 
             aqi_temp = aqi_text['data']['time']['s']
             if aqi_temp == "" or not(isinstance(aqi_temp, str)):
                 msg += '数据更新时间：未获取到数据\n'
             else:
-                msg += '数据更新时间：{update_time}\n'.format(update_time=str(aqi_temp))
+                msg += '数据更新时间：{update_time:^6}\n'.format(update_time=str(aqi_temp))
 
             return msg
         else:
@@ -131,7 +130,8 @@ try:
             if pattern.search(location[1]) == None:
                 bot.reply_to(message, '输入不合法，请检查输入内容。')
             else:
-                bot.reply_to(message, formatData(checkAPI(location[1])))
+                output = '```\n' + formatData(checkAPI(location[1])) + '\n```'
+                bot.reply_to(message, output, parse_mode="Markdown")
 
     def channel_broadcast(bot, channel_id):
         last_data = checkAPI('beijing')
