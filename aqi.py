@@ -65,7 +65,8 @@ try:
 
     def formatData(aqi_text):
         if aqi_text['status'] == 'ok':
-            msg = '{city}的AQI：'.format(city=str(aqi_text['data']['city']['name']))
+            msg = '{city}的AQI：'.format(
+                city=str(aqi_text['data']['city']['name']))
 
             aqi_temp = aqi_text['data']['aqi']
 
@@ -92,20 +93,23 @@ try:
             if aqi_temp == "" or not(isinstance(aqi_temp, str)):
                 msg += '主要污染物：未获取到数据\n'
             else:
-                msg += '主要污染物：{dominentpol:^6}\n'.format(dominentpol=str(formatPol(aqi_temp)))
+                msg += '主要污染物：{dominentpol:^6}\n'.format(
+                    dominentpol=str(formatPol(aqi_temp)))
 
             for i in aqi_text['data']['iaqi']:
                 aqi_temp = aqi_text['data']['iaqi'][i]['v']
                 if not(aqi_temp, int):
                     msg += '{pol}：未获取到数据\n'.format(pol=str(formatPol(str(i))))
                 else:
-                    msg += '{pol}：\t{data:^6}\n'.format(pol=str(formatPol(str(i))), data=str(aqi_temp))
+                    msg += '{pol}：\t{data:^6}\n'.format(
+                        pol=str(formatPol(str(i))), data=str(aqi_temp))
 
             aqi_temp = aqi_text['data']['time']['s']
             if aqi_temp == "" or not(isinstance(aqi_temp, str)):
                 msg += '数据更新时间：未获取到数据\n'
             else:
-                msg += '数据更新时间：{update_time:^6}\n'.format(update_time=str(aqi_temp))
+                msg += '数据更新时间：{update_time:^6}\n'.format(
+                    update_time=str(aqi_temp))
 
             return msg
         else:
@@ -142,7 +146,8 @@ try:
             if curr_data['status'] == 'ok':
                 if last_data['data']['time']['v'] < curr_data['data']['time']['v']:
                     print('-----auto push-----')
-                    bot.send_message(channel_id, formatData(curr_data))
+                    output = '```\n' + formatData(curr_data) + '\n```'
+                    bot.send_message(channel_id, output, parse_mode="Markdown")
                     last_data = curr_data
             else:
                 bot.send_message(
