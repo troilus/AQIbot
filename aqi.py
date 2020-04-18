@@ -66,7 +66,7 @@ try:
 
     def formatData(aqi_text):
         if aqi_text['status'] == 'ok':
-            msg = str(aqi_text['data']['city']['name']) + '的AQI：'
+            msg = '{city}的AQI：'.format(city=str(aqi_text['data']['city']['name']))
 
             aqi_temp = aqi_text['data']['aqi']
 
@@ -93,20 +93,20 @@ try:
             if aqi_temp == "" or not(isinstance(aqi_temp, str)):
                 msg += '主要污染物：未获取到数据\n'
             else:
-                msg += '主要污染物：' + str(formatPol(aqi_temp)) + '\n'
+                msg += '主要污染物：{dominentpol}\n'.format(dominentpol=str(formatPol(aqi_temp)))
 
             for i in aqi_text['data']['iaqi']:
                 aqi_temp = aqi_text['data']['iaqi'][i]['v']
                 if not(aqi_temp, int):
-                    msg += str(formatPol(str(i))) + '：未获取到数据'
+                    msg += '{pol}：未获取到数据\n'.format(pol=str(formatPol(str(i))))
                 else:
-                    msg += str(formatPol(str(i))) + '：\t' + str(aqi_temp) + '\n'
+                    msg += '{pol}：\t{data}\n'.format(pol=str(formatPol(str(i))), data=str(aqi_temp))
 
             aqi_temp = aqi_text['data']['time']['s']
             if aqi_temp == "" or not(isinstance(aqi_temp, str)):
                 msg += '数据更新时间：未获取到数据\n'
             else:
-                msg += '数据更新时间：' + str(aqi_temp) + '\n'
+                msg += '数据更新时间：{update_time}\n'.format(update_time=str(aqi_temp))
 
             return msg
         else:
@@ -115,7 +115,7 @@ try:
             elif str(aqi_text['data']) == 'Invalid key':
                 return 'API_KEY错误，请联系开发者 @LittleBear0729 解决问题。'
             else:
-                return str(aqi_text['data']) + '\n请联系开发者解决问题，或者使用 /help 获取帮助。'
+                return '{error}\n请联系开发者解决问题，或者使用 /help 获取帮助。'.format(error=str(aqi_text['data']))
 
     @bot.message_handler(commands=['aqi'])
     def aqi(message):
