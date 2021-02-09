@@ -1,9 +1,8 @@
-# 空气质量智能提醒服务 china-aqi-bot
-#### Made by @xhn16729 and @fyzfy
-#### Basically finished
+# Telegram空气质量查询机器人 AQIbot
+#### Originate from https://github.com/littlebear0729/china-aqi-bot made by @xhn16729 and @fyzfy
+#### Bot: http://t.me/CNAQIbot
 
-#### Developer Telegram: https://t.me/littlebear0729
-#### Bot: https://t.me/china_aqibot
-#### Notification Channel: https://t.me/beijing_AQI
+#### Developer Telegram: https://t.me/wangli
 
-Automatically push notification about Air Quality Index via Telegram
+#### 数据源于http://aqicn.org/
+与中国AQI数值区别：
